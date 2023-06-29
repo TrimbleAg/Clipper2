@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(Clipper2 VERSION 1.2.2 LANGUAGES C CXX)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -244,12 +244,12 @@ if(USE_EXTERNAL_GBENCHMARK)
   add_subdirectory(BenchMark)
 endif()
 
-set(CLIPPER2_PCFILES "")
-foreach(lib ${CLIPPER2_LIBS})
-  set(pc "${CMAKE_CURRENT_BINARY_DIR}/${lib}.pc")
-  list(APPEND CLIPPER2_PCFILES ${pc})
-  CONFIGURE_FILE(Clipper2.pc.cmakein "${pc}" @ONLY)
-endforeach()
+# set(CLIPPER2_PCFILES "")
+# foreach(lib ${CLIPPER2_LIBS})
+#   set(pc "${CMAKE_CURRENT_BINARY_DIR}/${lib}.pc")
+#   list(APPEND CLIPPER2_PCFILES ${pc})
+#   CONFIGURE_FILE(Clipper2.pc.cmakein "${pc}" @ONLY)
+# endforeach()
 
 install(TARGETS ${CLIPPER2_LIBS}
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/clipper2
