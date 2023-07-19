@@ -3,7 +3,7 @@ from conan.tools.cmake import CMakeToolchain, CMake, cmake_layout
 
 
 class Clipper2Conan(ConanFile):
-    name = "Clipper2"
+    name = "clipper2"
     version = "1.2.2"
 
     license = "BSL License"

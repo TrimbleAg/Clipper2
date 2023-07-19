@@ -17,7 +17,7 @@
 #include <string>
 #include <iostream>
 #include <algorithm>
-#include <climits>
+#include <limits>
 #include <numeric>
 
 namespace Clipper2Lib
