@@ -244,12 +244,12 @@ if(USE_EXTERNAL_GBENCHMARK)
   add_subdirectory(BenchMark)
 endif()
 
-# set(CLIPPER2_PCFILES "")
-# foreach(lib ${CLIPPER2_LIBS})
-#   set(pc "${CMAKE_CURRENT_BINARY_DIR}/${lib}.pc")
-#   list(APPEND CLIPPER2_PCFILES ${pc})
-#   CONFIGURE_FILE(Clipper2.pc.cmakein "${pc}" @ONLY)
-# endforeach()
+set(CLIPPER2_PCFILES "")
+foreach(lib ${CLIPPER2_LIBS})
+  set(pc "${CMAKE_CURRENT_BINARY_DIR}/${lib}.pc")
+  list(APPEND CLIPPER2_PCFILES ${pc})
+  CONFIGURE_FILE(Clipper2.pc.cmakein "${pc}" @ONLY)
+endforeach()
 
 install(TARGETS ${CLIPPER2_LIBS}
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/clipper2
