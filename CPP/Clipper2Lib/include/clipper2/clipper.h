@@ -480,7 +480,7 @@ namespace Clipper2Lib {
       "MakePathZD requires values in multiples of 3");
     std::size_t size = N / 3;
     PathD result(size);
-    if constexpr (std::numeric_limits<T2>::is_integer)
+    if(std::numeric_limits<T2>::is_integer)
       for (size_t i = 0; i < size; ++i)
         result[i] = PointD(list[i * 3],
           list[i * 3 + 1], list[i * 3 + 2]);

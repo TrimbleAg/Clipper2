@@ -70,7 +70,7 @@ namespace Clipper2Lib
 
   static const double MAX_DBL = (std::numeric_limits<double>::max)();
 
-  static void DoError([[maybe_unused]] int error_code)
+  static void DoError(int error_code)
   {
 #if (defined(__cpp_exceptions) && __cpp_exceptions) || (defined(__EXCEPTIONS) && __EXCEPTIONS)
     switch (error_code)
@@ -95,11 +95,16 @@ namespace Clipper2Lib
   }
 
   // can we call std::round on T? (default false) (#824)
-  template <typename T, typename = void>
+  template<typename, typename = void>
   struct is_round_invocable : std::false_type {};
 
-  template <typename T>
-  struct is_round_invocable<T, std::void_t<decltype(std::round(std::declval<T>()))>> : std::true_type {};
+  // Helper type alias to replace std::void_t
+  template<typename...> struct voider { using type = void; };
+  template<typename... Ts> using void_t = typename voider<Ts...>::type;
+
+  template<typename T>
+  struct is_round_invocable<T, void_t<decltype(std::round(std::declval<T>()))>> 
+    : std::true_type {};
 
 
   //By far the most widely used filling rules for polygons are EvenOdd
@@ -123,9 +128,9 @@ namespace Clipper2Lib
     template <typename T2>
     inline void Init(const T2 x_ = 0, const T2 y_ = 0, const z_type z_ = 0)
     {
-      if constexpr (std::is_integral_v<T> &&
-        is_round_invocable<T2>::value && !std::is_integral_v<T2>)
-      {
+      if (std::is_integral<T>::value &&
+          is_round_invocable<T2>::value && 
+          !std::is_integral<T2>::value){
         x = static_cast<T>(std::round(x_));
         y = static_cast<T>(std::round(y_));
         z = z_;
@@ -177,8 +182,9 @@ namespace Clipper2Lib
     template <typename T2>
     inline void Init(const T2 x_ = 0, const T2 y_ = 0)
     {
-      if constexpr (std::is_integral_v<T> &&
-        is_round_invocable<T2>::value && !std::is_integral_v<T2>)
+      if(std::is_integral<T>::value &&
+        is_round_invocable<T2>::value &&
+        !std::is_integral<T2>::value)
       {
         x = static_cast<T>(std::round(x_));
         y = static_cast<T>(std::round(y_));
@@ -407,8 +413,9 @@ namespace Clipper2Lib
   {
     Rect<T1> result;
 
-    if constexpr (std::is_integral_v<T1> &&
-      is_round_invocable<T2>::value && !std::is_integral_v<T2>)
+    if(std::is_integral<T1>::value &&
+      is_round_invocable<T2>::value && 
+      !std::is_integral<T2>::value)
     {
       result.left = static_cast<T1>(std::round(rect.left * scale));
       result.top = static_cast<T1>(std::round(rect.top * scale));
@@ -560,7 +567,7 @@ namespace Clipper2Lib
   {
     Paths<T1> result;
 
-    if constexpr (std::is_integral_v<T1>)
+    if(std::is_integral<T1>::value)
     {
       RectD r = GetBounds<double, T2>(paths);
       if ((r.left * scale_x) < min_coord ||
@@ -874,7 +881,7 @@ namespace Clipper2Lib
     T bb1maxx = CC_MAX(ln2a.x, ln2b.x);
     T bb1maxy = CC_MAX(ln2a.y, ln2b.y);
 
-    if constexpr (std::is_integral_v<T>)
+    if(std::is_integral<T>::value)
     {
       int64_t originx = (CC_MIN(bb0maxx, bb1maxx) + CC_MAX(bb0minx, bb1minx)) >> 1;
       int64_t originy = (CC_MIN(bb0maxy, bb1maxy) + CC_MAX(bb0miny, bb1miny)) >> 1;
@@ -990,7 +997,7 @@ namespace Clipper2Lib
         static_cast<double>(offPt.y - seg1.y) * dy) /
       (Sqr(dx) + Sqr(dy));
     if (q < 0) q = 0; else if (q > 1) q = 1;
-    if constexpr (std::is_integral_v<T>)
+    if(std::is_integral<T>::value)
       return Point<T>(
         seg1.x + static_cast<T>(nearbyint(q * dx)),
         seg1.y + static_cast<T>(nearbyint(q * dy)));

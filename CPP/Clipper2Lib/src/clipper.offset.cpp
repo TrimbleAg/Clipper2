@@ -33,9 +33,9 @@ const double arc_const = 0.002; // <-- 1/500
 // Miscellaneous methods
 //------------------------------------------------------------------------------
 
-std::optional<size_t> GetLowestClosedPathIdx(const Paths64& paths)
+size_t GetLowestClosedPathIdx(const Paths64& paths)
 {
-    std::optional<size_t> result;
+    size_t result = SIZE_MAX;
 	Point64 botPt = Point64(INT64_MAX, INT64_MIN);
 	for (size_t i = 0; i < paths.size(); ++i)
 	{
@@ -145,11 +145,11 @@ ClipperOffset::Group::Group(const Paths64& _paths, JoinType _join_type, EndType 
 		// the lowermost path must be an outer path, so if its orientation is negative,
 		// then flag the whole group is 'reversed' (will negate delta etc.)
 		// as this is much more efficient than reversing every path.
-    is_reversed = (lowest_path_idx.has_value()) && Area(paths_in[lowest_path_idx.value()]) < 0;
+    is_reversed = (lowest_path_idx != SIZE_MAX) && Area(paths_in[lowest_path_idx]) < 0;
 	}
 	else
 	{
-    lowest_path_idx = std::nullopt;
+    lowest_path_idx = SIZE_MAX;
 		is_reversed = false;
 	}
 }
@@ -451,7 +451,7 @@ void ClipperOffset::DoGroupOffset(Group& group)
 	{
 		// a straight path (2 points) can now also be 'polygon' offset
 		// where the ends will be treated as (180 deg.) joins
-        if (!group.lowest_path_idx.has_value()) delta_ = std::abs(delta_);
+        if (group.lowest_path_idx == SIZE_MAX) delta_ = std::abs(delta_);
 		group_delta_ = (group.is_reversed) ? -delta_ : delta_;
 	}
 	else

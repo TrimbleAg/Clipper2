@@ -358,7 +358,8 @@ namespace Clipper2Lib {
 
 		PolyPath64* AddChild(const Path64& path) override
 		{
-			return childs_.emplace_back(std::make_unique<PolyPath64>(this, path)).get();
+			childs_.emplace_back(std::make_unique<PolyPath64>(this, path));
+			return childs_.back().get();
 		}
 
 		void Clear() override
@@ -428,12 +429,14 @@ namespace Clipper2Lib {
 
 		PolyPathD* AddChild(const Path64& path) override
 		{
-			return childs_.emplace_back(std::make_unique<PolyPathD>(this, path)).get();
+			childs_.emplace_back(std::make_unique<PolyPathD>(this, path));
+			return childs_.back().get();
 		}
 
 		PolyPathD* AddChild(const PathD& path)
 		{
-			return childs_.emplace_back(std::make_unique<PolyPathD>(this, path)).get();
+			childs_.emplace_back(std::make_unique<PolyPathD>(this, path));
+			return childs_.back().get();
 		}
 
 		void Clear() override
